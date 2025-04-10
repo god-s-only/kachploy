@@ -18,8 +18,13 @@ class SignInViewModel @Inject constructor() : ViewModel(){
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    task.result.user?.let {
-                        _state.value = SignInState.Success
+                    Firebase.auth.currentUser?.sendEmailVerification()
+                        ?.addOnCompleteListener {
+                            if(it.isSuccessful){
+                                task.result.user?.let {
+                                    _state.value = SignInState.Success
+                            }
+                        }
                     }
                     _state.value = SignInState.Error
                 }else{
