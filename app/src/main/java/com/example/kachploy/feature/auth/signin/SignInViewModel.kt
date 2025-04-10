@@ -13,29 +13,39 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor() : ViewModel(){
     private val _state = MutableStateFlow<SignInState>(SignInState.Nothing)
     val state = _state.asStateFlow()
+
     fun signInUser(email: String, password: String){
         _state.value = SignInState.Loading
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    Firebase.auth.currentUser?.sendEmailVerification()
-                        ?.addOnCompleteListener {
-                            if(it.isSuccessful){
-                                task.result.user?.let {
-                                    _state.value = SignInState.Success
-                            }
+                    if(Firebase.auth.currentUser?.isEmailVerified == true){
+                        task.result.user?.let {
+                            _state.value = SignInState.Success
+                            return@addOnCompleteListener
                         }
+                    }else{
+                        Firebase.auth.currentUser?.sendEmailVerification()
+                            ?.addOnCompleteListener { task ->
+                                if(task.isSuccessful){
+                                    _state.value = SignInState.Pending
+                                }else{
+                                    _state.value = SignInState.Error
+                                }
+                            }
                     }
                     _state.value = SignInState.Error
                 }else{
                     _state.value = SignInState.Error
                 }
+
             }
     }
 }
 sealed class SignInState{
     object Nothing: SignInState()
     object Loading: SignInState()
+    object Pending: SignInState()
     object Success: SignInState()
     object Error: SignInState()
 }
