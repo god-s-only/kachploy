@@ -1,8 +1,7 @@
-package com.example.kachploy.feature.auth.signin
+package com.example.kachploy.activities.auth.signin
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +28,7 @@ class SignInViewModel @Inject constructor() : ViewModel(){
                             ?.addOnCompleteListener { task ->
                                 if(task.isSuccessful){
                                     _state.value = SignInState.Pending
+                                    return@addOnCompleteListener
                                 }else{
                                     _state.value = SignInState.Error
                                 }

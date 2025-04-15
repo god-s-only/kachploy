@@ -1,4 +1,4 @@
-package com.example.kachploy.feature.auth.signup
+package com.example.kachploy.activities.auth.signup
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
