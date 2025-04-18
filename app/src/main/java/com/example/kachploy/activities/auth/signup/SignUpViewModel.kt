@@ -14,14 +14,14 @@ class SignUpViewModel @Inject constructor(): ViewModel(){
     private val _state = MutableStateFlow<SignUpState>(SignUpState.Nothing)
     val state = _state.asStateFlow()
 
-    fun createUser(firstName: String, lastName: String,email: String, password: String){
+    fun createUser(fullName: String, email: String, password: String){
         _state.value = SignUpState.Loading
         Firebase.auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     task.result.user?.let {
                         it.updateProfile(UserProfileChangeRequest.Builder()
-                            .setDisplayName("$firstName $lastName")
+                            .setDisplayName(fullName)
                             .build()).addOnCompleteListener {
                                 _state.value = SignUpState.Pending
                                 Firebase.auth.currentUser?.sendEmailVerification()
@@ -34,7 +34,6 @@ class SignUpViewModel @Inject constructor(): ViewModel(){
                                     }
                             }
                         }
-                    _state.value = SignUpState.Error
                 }else{
                     _state.value = SignUpState.Error
                 }

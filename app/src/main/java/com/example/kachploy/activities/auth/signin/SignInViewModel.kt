@@ -13,32 +13,28 @@ class SignInViewModel @Inject constructor() : ViewModel(){
     private val _state = MutableStateFlow<SignInState>(SignInState.Nothing)
     val state = _state.asStateFlow()
 
-    fun signInUser(email: String, password: String){
+    fun signInUser(email: String, password: String) {
         _state.value = SignInState.Loading
+
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful){
-                    if(Firebase.auth.currentUser?.isEmailVerified == true){
-                        task.result.user?.let {
-                            _state.value = SignInState.Success
-                            return@addOnCompleteListener
-                        }
-                    }else{
-                        Firebase.auth.currentUser?.sendEmailVerification()
-                            ?.addOnCompleteListener { task ->
-                                if(task.isSuccessful){
-                                    _state.value = SignInState.Pending
-                                    return@addOnCompleteListener
-                                }else{
-                                    _state.value = SignInState.Error
+                if (task.isSuccessful) {
+                    val user = Firebase.auth.currentUser
+                    if (user?.isEmailVerified == true) {
+                        _state.value = SignInState.Success
+                    } else {
+                        user?.sendEmailVerification()
+                            ?.addOnCompleteListener { emailTask ->
+                                _state.value = if (emailTask.isSuccessful) {
+                                    SignInState.Pending
+                                } else {
+                                    SignInState.Error
                                 }
                             }
                     }
-                    _state.value = SignInState.Error
-                }else{
+                } else {
                     _state.value = SignInState.Error
                 }
-
             }
     }
 }
