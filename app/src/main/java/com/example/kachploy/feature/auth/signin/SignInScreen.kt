@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.kachploy.MainActivity
 import com.example.kachploy.R
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -63,7 +64,7 @@ fun SignInScreen(navController: NavController) {
     LaunchedEffect(key1 = uiState.value) {
         when(uiState.value) {
             is SignInState.Success -> {
-                navController.navigate("homescreen")
+                navigateMainActivity(context)
             }
             is SignInState.Error -> {
                 Toast.makeText(context, "Sign in error", Toast.LENGTH_LONG).show()
@@ -277,4 +278,6 @@ fun SignInScreen(navController: NavController) {
 fun GreetingPreview() {
     SignInScreen(navController = rememberNavController())
 }
-
+private fun navigateMainActivity(context: Context){
+    context.startActivity(Intent(context, MainActivity::class.java))
+}

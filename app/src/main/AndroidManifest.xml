@@ -15,18 +15,8 @@
         tools:targetApi="31">
         <activity
             android:name=".AuthActivity"
-            android:exported="false"
-            android:label="@string/title_activity_auth_composable"
-            android:theme="@style/Theme.KachPloy" />
-        <activity
-            android:name=".activities.ProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/Theme.KachPloy" />
-        <activity
-            android:name=".activities.auth.signin.SignInActivity"
             android:exported="true"
-            android:label="SignInActivity"
+            android:label="@string/title_activity_auth_composable"
             android:theme="@style/Theme.KachPloy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,11 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.auth.signup.SignUpActivity"
-            android:exported="false"
-            android:label="@string/title_activity_sign_up"
-            android:theme="@style/Theme.KachPloy" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
