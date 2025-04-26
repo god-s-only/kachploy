@@ -14,6 +14,11 @@
         android:theme="@style/Theme.KachPloy"
         tools:targetApi="31">
         <activity
+            android:name=".AuthActivity"
+            android:exported="false"
+            android:label="@string/title_activity_auth_composable"
+            android:theme="@style/Theme.KachPloy" />
+        <activity
             android:name=".activities.ProfileActivity"
             android:exported="false"
             android:label="@string/title_activity_profile"

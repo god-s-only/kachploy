@@ -57,7 +57,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
-        freeCompilerArgs += listOf("-Xno-record-desugaring")
         jvmTarget = "17"
     }
     buildFeatures {
