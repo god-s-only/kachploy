@@ -65,7 +65,7 @@ fun SignInScreen(navController: NavController) {
     LaunchedEffect(key1 = uiState.value) {
         when(uiState.value) {
             is SignInState.Success -> {
-                navigateMainActivity(context)
+                navController.navigate("profile")
             }
             is SignInState.Error -> {
                 Toast.makeText(context, "Sign in error", Toast.LENGTH_LONG).show()
@@ -174,7 +174,7 @@ fun SignInScreen(navController: NavController) {
                     Button(
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                         onClick = { viewModel.signInUser(email, password) },
-                        enabled = email.isNotEmpty() && password.isNotEmpty() && uiState.value == SignInState.Nothing,
+                        enabled = email.isNotEmpty() && password.isNotEmpty() && uiState.value == SignInState.Nothing || uiState.value == SignInState.Pending || uiState.value == SignInState.Error,
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
                     ) {
@@ -262,7 +262,6 @@ fun SignInScreen(navController: NavController) {
                                 Text(
                                     text = "Sign Up",
                                     color = Color.Blue,
-                                    fontWeight = FontWeight.SemiBold
                                 )
                             }
                         }
@@ -278,7 +277,4 @@ fun SignInScreen(navController: NavController) {
 @Composable
 fun GreetingPreview() {
     SignInScreen(navController = rememberNavController())
-}
-private fun navigateMainActivity(context: Context){
-    context.startActivity(Intent(context, MainActivity::class.java))
 }

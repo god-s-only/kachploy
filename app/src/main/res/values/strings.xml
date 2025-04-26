@@ -3,4 +3,5 @@
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_auth_composable">AuthComposable</string>
+    <string name="sign_up_info">Create an account to continue!</string>
 </resources>
