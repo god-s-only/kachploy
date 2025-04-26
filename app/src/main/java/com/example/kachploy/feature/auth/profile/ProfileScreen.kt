@@ -182,7 +182,7 @@ fun ProfileScreen(navController: NavController) {
                             contentDescription = "Lock Icon",
                             modifier = Modifier.padding(end = 8.dp)
                         )
-                        Text("Change Password", fontSize = 16.sp)
+                        Text("Save Information", fontSize = 16.sp)
                     }
                 }
             }
