@@ -1,6 +1,10 @@
 package com.example.kachploy.feature.auth.profile
 
+import android.Manifest
 import android.net.Uri
+import android.os.Environment
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.foundation.Image
@@ -28,14 +32,57 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.kachploy.R
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
 fun ProfileScreen(navController: NavController) {
-    val cameraUri = remember { mutableStateOf<Uri?>(null) }
+    val showDialog = remember { mutableStateOf(false) }
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) {
+
+    }
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        uri: Uri? ->
+        uri?.let {
+            imageUri.value = it
+        }
+    }
+
+    fun createImageUri(): Uri{
+        val timeStamp = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
+        val storageDir = ContextCompat.getExternalFilesDirs(
+            navController.context,
+            Environment.DIRECTORY_PICTURES
+        ).first()
+        return FileProvider.getUriForFile(navController.context, "${navController.context.packageName}.provider",
+            File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
+                imageUri.value = Uri.fromFile(this)
+            })
+    }
+
+    val permission = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { success ->
+        if(success){
+            cameraLauncher.launch(createImageUri())
+        }
+
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -188,6 +235,20 @@ fun ProfileScreen(navController: NavController) {
             }
         }
     }
+    if(showDialog.value){
+        ContentDialogSelection({
+            showDialog.value = false
+            if(navController.context.checkSelfPermission(Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED){
+                cameraLauncher.launch(createImageUri())
+            }else{
+                showDialog.value = false
+                permission.launch(Manifest.permission.CAMERA)
+            }
+        }) {
+            showDialog.value = false
+            imageLauncher.launch("image/*")
+        }
+    }
     }
 
 
@@ -250,6 +311,30 @@ fun DropdownField(label: String) {
         )
     }
 }
+
+@Composable
+fun ContentDialogSelection(onCameraSelected : () -> Unit, onImageSelected : () -> Unit){
+    AlertDialog(onDismissRequest = {
+
+    },
+        confirmButton = {
+            TextButton(onClick = onCameraSelected) {
+                Text(text = "Camera")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onImageSelected) {
+                Text(text = "Gallery")
+            }
+        },
+        title = {
+            Text(text = "Select Source")
+        },
+        text = {
+            Text(text = "Please select a source of your choice for your profile photo")
+        })
+}
+
 @Preview(showBackground = true)
 @Composable
 fun Default(){
