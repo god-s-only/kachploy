@@ -49,6 +49,10 @@ fun ProfileScreen(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
     val viewModel: ProfileViewModel = hiltViewModel()
     val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val painter = rememberAsyncImagePainter(
+        model = imageUri,
+        contentScale = ContentScale.Fit
+    )
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) {
