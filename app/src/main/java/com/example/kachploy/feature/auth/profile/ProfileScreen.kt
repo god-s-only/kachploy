@@ -48,6 +48,9 @@ import java.util.Locale
 @Composable
 fun ProfileScreen(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
+    var viewModel = hiltViewModel<ProfileViewModel>()
+    val address = remember { mutableStateOf("") }
+    var profileState = viewModel.profileState.collectAsState()
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val availability = remember { mutableStateOf("") }
     val yearsOfExperience = remember { mutableStateOf("") }
@@ -58,7 +61,12 @@ fun ProfileScreen(navController: NavController) {
     )
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
-    ) {
+    ) { success ->
+        if(success){
+
+        }else{
+
+        }
 
     }
     val imageLauncher = rememberLauncherForActivityResult(
@@ -220,14 +228,23 @@ fun ProfileScreen(navController: NavController) {
 
                         ProfileTextField("Availability", availability.value)
                         ProfileTextField("Years of experience", yearsOfExperience.value)
+                        ProfileTextField("Address", address.value)
                     }
 
                     Button(
-                        onClick = { /* Handle password change */ },
+                        onClick = {viewModel.saveUserInformation(
+                            address.value,
+                            availability.value,
+                            phoneNumber.value,
+                            "Employee",
+                            yearsOfExperience.value,
+                            imageUri.value
+                        )},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                             .height(48.dp),
+                        enabled = imageUri.value != null,
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                         shape = RoundedCornerShape(8.dp)
                     ) {
