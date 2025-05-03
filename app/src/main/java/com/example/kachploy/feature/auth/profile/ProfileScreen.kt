@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,8 +48,10 @@ import java.util.Locale
 @Composable
 fun ProfileScreen(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
-    val viewModel: ProfileViewModel = hiltViewModel()
     val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val availability = remember { mutableStateOf("") }
+    val yearsOfExperience = remember { mutableStateOf("") }
+    var phoneNumber = remember { mutableStateOf("") }
     val painter = rememberAsyncImagePainter(
         model = imageUri,
         contentScale = ContentScale.Fit
@@ -110,6 +113,7 @@ fun ProfileScreen(navController: NavController) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
+                    modifier = Modifier.padding(8.dp),
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
                     tint = Color.White
@@ -142,11 +146,12 @@ fun ProfileScreen(navController: NavController) {
                                 contentDescription = "Profile Image",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
+                                    .clickable{showDialog.value = true}
                             )
                         }
 
                         FloatingActionButton(
-                            onClick = { /* Handle edit profile picture */ },
+                            onClick = { showDialog.value = true },
                             modifier = Modifier
                                 .size(28.dp)
                                 .align(Alignment.BottomEnd),
@@ -180,8 +185,8 @@ fun ProfileScreen(navController: NavController) {
                         )
 
                         OutlinedTextField(
-                            value = "904 6470",
-                            onValueChange = { /* Handle value change */ },
+                            value = phoneNumber.value,
+                            onValueChange = { phoneNumber.value = it },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp),
@@ -212,13 +217,11 @@ fun ProfileScreen(navController: NavController) {
                             ),
                             singleLine = true
                         )
+
+                        ProfileTextField("Availability", availability.value)
+                        ProfileTextField("Years of experience", yearsOfExperience.value)
                     }
 
-                    // Dropdown fields
-                    DropdownField(label = "Birth")
-                    DropdownField(label = "Gender")
-
-                    // Change Password button
                     Button(
                         onClick = { /* Handle password change */ },
                         modifier = Modifier
@@ -283,40 +286,6 @@ fun ProfileTextField(label: String, value: String) {
 }
 
 @Composable
-fun DropdownField(label: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = { /* Handle value change */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            shape = RoundedCornerShape(8.dp),
-            readOnly = true,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Dropdown",
-                    tint = Color.Black
-                )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.LightGray,
-                unfocusedBorderColor = Color.LightGray
-            ),
-            singleLine = true
-        )
-    }
-}
-
-@Composable
 fun ContentDialogSelection(onCameraSelected : () -> Unit, onImageSelected : () -> Unit){
     AlertDialog(onDismissRequest = {
 
@@ -342,5 +311,5 @@ fun ContentDialogSelection(onCameraSelected : () -> Unit, onImageSelected : () -
 @Preview(showBackground = true)
 @Composable
 fun Default(){
-    ProfileScreen(rememberNavController())
+    ProfileScreen(navController = rememberNavController())
 }
