@@ -3,6 +3,7 @@ package com.example.kachploy.feature.auth.profile
 import android.Manifest
 import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,20 +52,20 @@ fun ProfileScreen(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
     var viewModel = hiltViewModel<ProfileViewModel>()
     val address = remember { mutableStateOf("") }
+    val context = LocalContext.current
     var profileState = viewModel.profileState.collectAsState()
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val availability = remember { mutableStateOf("") }
     val yearsOfExperience = remember { mutableStateOf("") }
     var phoneNumber = remember { mutableStateOf("") }
     val painter = rememberAsyncImagePainter(
-        model = imageUri,
-        contentScale = ContentScale.Fit
+        model = imageUri
     )
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
         if(success){
-
+            Toast.makeText(context, "Photo taken successfully", Toast.LENGTH_LONG).show()
         }else{
 
         }
@@ -109,25 +111,12 @@ fun ProfileScreen(navController: NavController) {
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color.Blue,
+                            Color.Green,
                             Color.White
                         )
                     )
                 )
         ) {
-            // Back button
-            IconButton(
-                onClick = { /* Handle back navigation */ },
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Icon(
-                    modifier = Modifier.padding(8.dp),
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color.White
-                )
-            }
-
             Card(
                 modifier = Modifier
                     .padding(16.dp)
@@ -226,9 +215,48 @@ fun ProfileScreen(navController: NavController) {
                             singleLine = true
                         )
 
-                        ProfileTextField("Availability", availability.value)
-                        ProfileTextField("Years of experience", yearsOfExperience.value)
-                        ProfileTextField("Address", address.value)
+                        OutlinedTextField(
+                            value = availability.value,
+                            placeholder = {Text(text = "Availability")},
+                            onValueChange = {availability.value = it},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.LightGray,
+                                unfocusedBorderColor = Color.LightGray
+                            ),
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = yearsOfExperience.value,
+                            placeholder = {Text(text = "Years of experience")},
+                            onValueChange = {yearsOfExperience.value = it},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.LightGray,
+                                unfocusedBorderColor = Color.LightGray
+                            ),
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = address.value,
+                            placeholder = {Text(text = "Address")},
+                            onValueChange = {address.value = it},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.LightGray,
+                                unfocusedBorderColor = Color.LightGray
+                            ),
+                            singleLine = true
+                        )
                     }
 
                     Button(
@@ -275,32 +303,6 @@ fun ProfileScreen(navController: NavController) {
     }
     }
 
-
-@Composable
-fun ProfileTextField(label: String, value: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-
-        OutlinedTextField(
-            value = value,
-            onValueChange = { /* Handle value change */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.LightGray,
-                unfocusedBorderColor = Color.LightGray
-            ),
-            singleLine = true
-        )
-    }
-}
 
 @Composable
 fun ContentDialogSelection(onCameraSelected : () -> Unit, onImageSelected : () -> Unit){
