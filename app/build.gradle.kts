@@ -102,6 +102,17 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
 
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.0.1")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.0.1")
+    implementation(libs.coil)
+    val ktor_version = "2.3.13"
+    implementation("io.ktor:ktor-client-android:$ktor_version")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-utils:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
+
 
     implementation(libs.coil)
 }

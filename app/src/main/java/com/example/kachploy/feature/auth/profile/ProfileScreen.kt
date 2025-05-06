@@ -39,8 +39,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.kachploy.R
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,6 +52,8 @@ import java.util.Locale
 @Composable
 fun ProfileScreen(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     var viewModel = hiltViewModel<ProfileViewModel>()
     val address = remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -58,7 +62,7 @@ fun ProfileScreen(navController: NavController) {
     val availability = remember { mutableStateOf("") }
     val yearsOfExperience = remember { mutableStateOf("") }
     var phoneNumber = remember { mutableStateOf("") }
-    val painter = rememberAsyncImagePainter(
+    val painter: AsyncImagePainter? = rememberAsyncImagePainter(
         model = imageUri
     )
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -102,8 +106,29 @@ fun ProfileScreen(navController: NavController) {
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) {
+
+        LaunchedEffect(key1 = profileState.value) {
+            when(profileState.value){
+                is ProfileState.Success -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Profile Updated Successfully")
+                    }
+                }
+                is ProfileState.Error ->{
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Error updating Profile")
+                    }
+
+                }
+                else -> {}
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -139,7 +164,7 @@ fun ProfileScreen(navController: NavController) {
                                 .background(Color.LightGray)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.google),
+                                painter = painter ?: painterResource(id = R.drawable.baseline_person_24),
                                 contentDescription = "Profile Image",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
@@ -163,7 +188,6 @@ fun ProfileScreen(navController: NavController) {
                         }
                     }
 
-                    // Edit Profile Title
                     Text(
                         text = "Edit Profile",
                         fontSize = 24.sp,
@@ -172,18 +196,11 @@ fun ProfileScreen(navController: NavController) {
                     )
 
 
-                    // Phone number field
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Phone Number",
-                            fontSize = 14.sp,
-                            color = Color.Gray,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-
                         OutlinedTextField(
                             value = phoneNumber.value,
                             onValueChange = { phoneNumber.value = it },
+                            label = { Text(text = "Phone Number")},
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp),
@@ -217,7 +234,7 @@ fun ProfileScreen(navController: NavController) {
 
                         OutlinedTextField(
                             value = availability.value,
-                            placeholder = {Text(text = "Availability")},
+                            label = {Text(text = "Availability")},
                             onValueChange = {availability.value = it},
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -231,7 +248,7 @@ fun ProfileScreen(navController: NavController) {
                         )
                         OutlinedTextField(
                             value = yearsOfExperience.value,
-                            placeholder = {Text(text = "Years of experience")},
+                            label = {Text(text = "Years of experience")},
                             onValueChange = {yearsOfExperience.value = it},
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -245,7 +262,7 @@ fun ProfileScreen(navController: NavController) {
                         )
                         OutlinedTextField(
                             value = address.value,
-                            placeholder = {Text(text = "Address")},
+                            label = {Text(text = "Address")},
                             onValueChange = {address.value = it},
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -283,7 +300,14 @@ fun ProfileScreen(navController: NavController) {
                         )
                         Text("Save Information", fontSize = 16.sp)
                     }
+
+
                 }
+                if(profileState.value == ProfileState.Loading){
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+            }
             }
         }
     }
