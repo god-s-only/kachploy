@@ -24,20 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(@ApplicationContext val context: Context): ViewModel() {
-    // Private mutable state flow
     private val _profileState = MutableStateFlow<ProfileState>(ProfileState.Nothing)
 
-    // Public immutable state flow
     val profileState: StateFlow<ProfileState> = _profileState.asStateFlow()
 
-    // Firebase references
     private val userDocument = Firebase.firestore
     private val currentUser = Firebase.auth.currentUser
-    private val storage = Firebase.storage.reference
 
-    /**
-     * Saves user information to Firestore with profile picture upload to Firebase Storage
-     */
+
     fun saveUserInformation(
         address: String,
         availability: String,
@@ -83,15 +77,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
         }
     }
 
-    /**
-     * Uploads profile picture to Firebase Storage
-     * @return Download URL of the uploaded image
-     */
 
-
-    /**
-     * Saves user information to Firestore
-     */
     private suspend fun saveUserToFirestore(userInformation: UserInformation) = withContext(Dispatchers.IO) {
         try {
             userDocument
@@ -107,9 +93,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
         }
     }
 
-    /**
-     * Get current user information from Firestore
-     */
+
     fun getUserInformation() {
         viewModelScope.launch {
             try {
@@ -145,9 +129,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
     }
 }
 
-/**
- * Sealed class representing the different states of the profile
- */
+
 sealed class ProfileState {
     object Nothing : ProfileState()
     object Loading : ProfileState()
