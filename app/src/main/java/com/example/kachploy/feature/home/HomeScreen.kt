@@ -48,10 +48,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.R
-import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +59,7 @@ import com.google.accompanist.placeholder.placeholder
 fun HomeScreen(navController: NavController){
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var searchValue by remember { mutableStateOf("") }
+    var viewModel = hiltViewModel<HomeViewModel>()
     val categories = listOf<String>("Best Matches", "Most Recents", "Saved Jobs")
 
     Scaffold(modifier = Modifier.fillMaxSize(),

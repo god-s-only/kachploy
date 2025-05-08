@@ -22,7 +22,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("../kachploy-release-key.jks") // Path to the keystore in the root directory
+            storeFile = file("../kachploy-release-key.jks")
             storePassword = "kachployStore123"
             keyAlias = "kachployKeyAlias"
             keyPassword = "kachployStore123"
@@ -86,8 +86,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
-
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")

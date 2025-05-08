@@ -94,38 +94,8 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
     }
 
 
-    fun getUserInformation() {
-        viewModelScope.launch {
-            try {
-                _profileState.value = ProfileState.Loading
-
-                if (currentUser == null) {
-                    _profileState.value = ProfileState.Error("User not authenticated")
-                    return@launch
-                }
-
-                val userDoc = userDocument
-                    .collection("users")
-                    .document(currentUser.uid)
-                    .get()
-                    .await()
-
-                if (userDoc.exists()) {
-                    val user = userDoc.toObject(UserInformation::class.java)
-                    _profileState.value = user?.let { ProfileState.UserLoaded(it) }
-                        ?: ProfileState.Error("Failed to parse user data")
-                } else {
-                    _profileState.value = ProfileState.Empty
-                }
-            } catch (e: Exception) {
-                _profileState.value = ProfileState.Error(e.message ?: "Unknown error occurred")
-            }
-        }
-    }
-
     override fun onCleared() {
         super.onCleared()
-        // Clean up any resources if needed
     }
 }
 
@@ -134,7 +104,5 @@ sealed class ProfileState {
     object Nothing : ProfileState()
     object Loading : ProfileState()
     object Success : ProfileState()
-    object Empty : ProfileState()
     data class Error(val message: String) : ProfileState()
-    data class UserLoaded(val userInformation: UserInformation) : ProfileState()
 }
