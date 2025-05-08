@@ -10,7 +10,7 @@ data class UserInformation(
     val fullName: String? = "",
     val phone: String = "",
     val profileComplete: Boolean = true,
-    val profilePic: String = "",
+    val profilePic: String? = null,
     val role: String = "",
     val yearsOfExperience: String = ""
     )

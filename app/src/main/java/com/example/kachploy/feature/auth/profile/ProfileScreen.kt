@@ -85,7 +85,7 @@ fun ProfileScreen(navController: NavController) {
     }
 
     fun createImageUri(): Uri{
-        val timeStamp = SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.getDefault()).format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir = ContextCompat.getExternalFilesDirs(
             navController.context,
             Environment.DIRECTORY_PICTURES
