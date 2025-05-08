@@ -1,6 +1,8 @@
 package com.example.kachploy.feature.auth.profile
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
@@ -41,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.example.kachploy.MainActivity
 import com.example.kachploy.R
 import kotlinx.coroutines.launch
 import java.io.File
@@ -62,9 +65,11 @@ fun ProfileScreen(navController: NavController) {
     val availability = remember { mutableStateOf("") }
     val yearsOfExperience = remember { mutableStateOf("") }
     var phoneNumber = remember { mutableStateOf("") }
-    val painter: AsyncImagePainter? = rememberAsyncImagePainter(
-        model = imageUri
-    )
+    val painter = if (imageUri != null) {
+        rememberAsyncImagePainter(model = imageUri)
+    } else {
+        painterResource(id = R.drawable.baseline_person_24)
+    }
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
@@ -117,6 +122,7 @@ fun ProfileScreen(navController: NavController) {
                 is ProfileState.Success -> {
                     scope.launch {
                         snackbarHostState.showSnackbar("Profile Updated Successfully")
+                        navigateToMainActivity(context)
                     }
                 }
                 is ProfileState.Error ->{
@@ -355,4 +361,8 @@ fun ContentDialogSelection(onCameraSelected : () -> Unit, onImageSelected : () -
 @Composable
 fun Default(){
     ProfileScreen(navController = rememberNavController())
+}
+
+private fun navigateToMainActivity(context: Context){
+    context.startActivity(Intent(context, MainActivity::class.java))
 }

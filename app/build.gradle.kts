@@ -112,6 +112,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
+    implementation("com.google.accompanist:accompanist-placeholder-material3:0.34.0")
 
 
     implementation(libs.coil)

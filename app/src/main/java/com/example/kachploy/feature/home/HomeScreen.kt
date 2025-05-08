@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import com.google.accompanist.placeholder.material3.shimmer
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.R
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +97,9 @@ fun HomeScreen(navController: NavController){
                 }
                 item {
                     ColumnCategory(categories)
+                    HorizontalDivider()
                 }
+
             }
         }
 
