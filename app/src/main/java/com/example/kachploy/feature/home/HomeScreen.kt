@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,13 +54,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.R
 import com.google.accompanist.placeholder.placeholder
+import com.google.firebase.FirebaseApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController){
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var searchValue by remember { mutableStateOf("") }
-    var viewModel = hiltViewModel<HomeViewModel>()
+    var viewModel: HomeViewModel = hiltViewModel()
     val categories = listOf<String>("Best Matches", "Most Recents", "Saved Jobs")
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -71,7 +73,8 @@ fun HomeScreen(navController: NavController){
                 title = {
                     Text(text = "Jobs", maxLines = 1, overflow = TextOverflow.Ellipsis, fontWeight = FontWeight.Bold)
                         },
-                navigationIcon = { IconButton(onClick = {}) {
+                navigationIcon = {
+                    IconButton(onClick = {}) {
                     Image(painter = painterResource(id = R.drawable.google), contentDescription = "Profile")
                 } },
                 actions = {

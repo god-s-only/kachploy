@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.kachploy.models.UserInformation
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(): ViewModel() {
-    private val userDocument = FirebaseFirestore.getInstance()
-    private val currentUser = Firebase.auth.currentUser
+
     private var _homeState = MutableStateFlow<PostHomeState>(PostHomeState.Empty)
     var homeState = _homeState.asStateFlow()
 
@@ -26,13 +24,13 @@ class HomeViewModel @Inject constructor(): ViewModel() {
             try {
                 _homeState.value = PostHomeState.Loading
 
-                if (currentUser == null) {
+                if (Firebase.auth.currentUser == null) {
                     _homeState.value = PostHomeState.Error("User not authenticated")
                     return@launch
                 }
-                val userDoc = userDocument
+                val userDoc = Firebase.firestore
                     .collection("users")
-                    .document(currentUser.uid)
+                    .document(Firebase.auth.currentUser!!.uid)
                     .get()
                     .await()
 
