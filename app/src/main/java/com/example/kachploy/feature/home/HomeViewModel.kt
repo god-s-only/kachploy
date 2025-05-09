@@ -2,6 +2,7 @@ package com.example.kachploy.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kachploy.models.JobsModel
 import com.example.kachploy.models.UserInformation
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -35,7 +36,7 @@ class HomeViewModel @Inject constructor(): ViewModel() {
                     .await()
 
                 if (userDoc.exists()) {
-                    val user = userDoc.toObject(UserInformation::class.java)
+                    val user = userDoc.toObject(JobsModel::class.java)
                     _homeState.value = user?.let { PostHomeState.UserLoaded(it) }
                         ?: PostHomeState.Error("Failed to parse user data")
                 } else {

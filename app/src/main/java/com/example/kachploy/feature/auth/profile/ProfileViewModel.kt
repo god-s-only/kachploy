@@ -8,6 +8,7 @@ import com.example.kachploy.SupabaseStorageUtils
 import com.example.kachploy.models.UserInformation
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
@@ -53,7 +54,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
 
                 // Handle profile picture
                 val profilePicUrl = if (uri != null) {
-                    publicUrl.uploadProfilePicture(uri)
+                    Firebase.auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setPhotoUri(uri).build())
                 } else {
                     currentUser.photoUrl?.toString() ?: ""
                 }
@@ -63,7 +64,6 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
                     availability = availability,
                     email = currentUser.email,
                     phone = phone,
-                    profilePic = profilePicUrl,
                     role = role,
                     fullName = currentUser.displayName,
                     yearsOfExperience = yearsOfExperience
@@ -86,7 +86,6 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
                 .set(userInformation)
                 .await()
 
-            // Update state on success
             _profileState.value = ProfileState.Success
         } catch (e: Exception) {
             throw Exception("Failed to save user data: ${e.message}")

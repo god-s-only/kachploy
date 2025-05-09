@@ -33,6 +33,8 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.R
+import com.example.kachploy.models.JobsModel
 import com.google.accompanist.placeholder.placeholder
 import com.google.firebase.FirebaseApp
 
@@ -62,6 +65,7 @@ fun HomeScreen(navController: NavController){
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var searchValue by remember { mutableStateOf("") }
     var viewModel: HomeViewModel = hiltViewModel()
+    var homeState = viewModel.homeState.collectAsState()
     val categories = listOf<String>("Best Matches", "Most Recents", "Saved Jobs")
 
     Scaffold(modifier = Modifier.fillMaxSize(),
@@ -88,6 +92,11 @@ fun HomeScreen(navController: NavController){
                 scrollBehavior = scrollBehaviour
             )
         }) {
+
+        LaunchedEffect(key1 = homeState.value) {
+
+        }
+
         Column(modifier = Modifier.fillMaxSize()
             .padding(it)) {
             LazyColumn(modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)) {
@@ -137,8 +146,12 @@ fun ColumnCategory(categories: List<String>){
     }
 }
 
+@Composable
+fun JobItems(jobsModel: JobsModel){
+
+}
+
 @Preview
 @Composable
 fun DefaultPreview(){
-    HomeScreen(rememberNavController())
 }
