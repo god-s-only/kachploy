@@ -5,8 +5,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,9 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import com.google.accompanist.placeholder.material3.shimmer
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -46,16 +51,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.R
 import com.example.kachploy.models.JobsModel
+import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.firebase.FirebaseApp
 
@@ -135,8 +143,7 @@ fun ColumnCategory(categories: List<String>){
                     }
                     .clip(RoundedCornerShape(10.dp))
                     .background(
-                        if (selectedChipIndex == it) Color.Black
-                        else Color.LightGray
+                        if (selectedChipIndex == it) Color.Black else Color.LightGray
                     )
                     .padding(15.dp)
             ) {
@@ -147,11 +154,40 @@ fun ColumnCategory(categories: List<String>){
 }
 
 @Composable
-fun JobItems(jobsModel: JobsModel){
+fun JobItems(){
+    Box(modifier = Modifier.fillMaxWidth()
+        .padding(10.dp)
+        .background(Color.White)){
+        Column(modifier = Modifier.padding(5.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Title", color = Color.Black, maxLines = 2, overflow = TextOverflow.Ellipsis,style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                ),modifier = Modifier.fillMaxWidth(0.5f).clip(RoundedCornerShape(16.dp)).placeholder(
+                    visible = false,
+                    highlight = PlaceholderHighlight.shimmer(),
+                    color = Color.LightGray
+                ))
+                Row {
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+                    }
+                }
 
+            }
+
+        }
+    }
 }
 
 @Preview
 @Composable
 fun DefaultPreview(){
+    JobItems()
 }

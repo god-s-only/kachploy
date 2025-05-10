@@ -27,12 +27,16 @@ class AuthActivity : ComponentActivity() {
             KachPloyTheme {
                 AuthApp()
             }
+            val context = LocalContext.current
             mAuth = FirebaseAuth.getInstance()
             userDocument = FirebaseFirestore.getInstance()
             if(mAuth.currentUser != null){
-                if(userDocument.collection("users").document(mAuth.uid!!) != null){
-                    navigateMain(LocalContext.current)
-                }
+                userDocument.collection("users").document(mAuth.currentUser!!.uid).get()
+                    .addOnSuccessListener { document ->
+                        if(document.exists()){
+                            navigateMain(context)
+                        }
+                    }
             }
         }
     }
