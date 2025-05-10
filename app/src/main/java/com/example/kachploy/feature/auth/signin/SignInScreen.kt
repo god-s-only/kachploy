@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -129,7 +130,11 @@ fun SignInScreen(navController: NavController) {
                         value = email,
                         onValueChange = { email = it },
                         label = { Text(text = "Email") },
-                        textStyle = TextStyle(color = Color.Black)
+                        textStyle = TextStyle(color = Color.Black),
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
+                        )
                     )
                 }
 
@@ -140,7 +145,11 @@ fun SignInScreen(navController: NavController) {
                         visualTransformation = PasswordVisualTransformation(),
                         onValueChange = { password = it },
                         label = { Text(text = "Password") },
-                        textStyle = TextStyle(color = Color.Black)
+                        textStyle = TextStyle(color = Color.Black),
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
+                        )
                     )
                 }
 

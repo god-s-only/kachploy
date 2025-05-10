@@ -65,10 +65,13 @@ fun ProfileScreen(navController: NavController) {
     val availability = remember { mutableStateOf("") }
     val yearsOfExperience = remember { mutableStateOf("") }
     var phoneNumber = remember { mutableStateOf("") }
-    val painter = if (imageUri != null) {
-        rememberAsyncImagePainter(model = imageUri)
-    } else {
-        painterResource(id = R.drawable.baseline_person_24)
+    val painter = when(imageUri){
+        null -> {
+            painterResource(id = R.drawable.baseline_person_24)
+        }
+        else -> {
+            rememberAsyncImagePainter(model = imageUri)
+        }
     }
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()

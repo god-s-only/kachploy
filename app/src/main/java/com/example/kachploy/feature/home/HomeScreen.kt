@@ -112,7 +112,27 @@ fun HomeScreen(navController: NavController){
 
             when(homeState.value){
                 is PostHomeState.Loading -> {
-                    val jobs = (homeState.value as PostHomeState.Loading).jobs
+                    val skillsRequired = listOf<String>("kjfdjkfd", "hjhjdf", "hjf")
+                    val jobs = listOf<JobsModel>(
+                        JobsModel(
+                            createdAt = "jhedshjds",
+                            title = "hjfdfhjf",
+                            proposal = 3,
+                            skillsRequired = skillsRequired
+                        ),
+                        JobsModel(
+                            createdAt = "jhedshjds",
+                            title = "hjfdfhjf",
+                            proposal = 3,
+                            skillsRequired = skillsRequired
+                        ),
+                        JobsModel(
+                            createdAt = "jhedshjds",
+                            title = "hjfdfhjf",
+                            proposal = 3,
+                            skillsRequired = skillsRequired
+                        )
+                    )
                     Column(modifier = Modifier.fillMaxSize()
                         .padding(it)) {
                         LazyColumn(modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)) {
@@ -240,7 +260,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean){
                 Icon(painterResource(id = R.drawable.proposals), contentDescription = null, modifier = Modifier.size(30.dp).padding(end = 5.dp), tint = Color.Black)
                 Text(text = "Proposals: ${jobsModel.proposal}", color = Color.Gray)
             }
-            Text(text = jobsModel.description, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(5.dp).clip(
+            Text(text = jobsModel.description, maxLines = 2, overflow = TextOverflow.Ellipsis, color = Color.Gray,modifier = Modifier.padding(5.dp).clip(
                 RoundedCornerShape(8.dp)).placeholder(
                 visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
