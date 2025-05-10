@@ -244,7 +244,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean){
                 RoundedCornerShape(8.dp)).placeholder(
                 visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
-                color = Color.LightGray
+                color = Color.Gray
             ))
             Row(modifier = Modifier.fillMaxWidth()) {
                 jobsModel.skillsRequired.forEach { skill ->
