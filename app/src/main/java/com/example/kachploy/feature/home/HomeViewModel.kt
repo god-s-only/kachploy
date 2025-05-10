@@ -20,6 +20,10 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     private var _homeState = MutableStateFlow<PostHomeState>(PostHomeState.Empty)
     var homeState = _homeState.asStateFlow()
 
+    init {
+        getUserInformation()
+    }
+
     fun getUserInformation() {
         viewModelScope.launch {
             try {

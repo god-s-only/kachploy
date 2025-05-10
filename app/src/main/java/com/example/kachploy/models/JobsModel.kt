@@ -5,6 +5,7 @@ import java.util.Date
 import java.util.Locale
 
 data class JobsModel(
+    var jobId: String = "",
     var applicationDeadline: String = "",
     var createdAt: String = "",
     var description: String = "",

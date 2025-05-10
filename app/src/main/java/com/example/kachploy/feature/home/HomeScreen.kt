@@ -73,6 +73,9 @@ fun HomeScreen(navController: NavController){
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var searchValue by remember { mutableStateOf("") }
     var viewModel: HomeViewModel = hiltViewModel()
+    var loading = remember {
+        mutableStateOf(false)
+    }
     var homeState = viewModel.homeState.collectAsState()
     val categories = listOf<String>("Best Matches", "Most Recents", "Saved Jobs")
 
@@ -102,7 +105,16 @@ fun HomeScreen(navController: NavController){
         }) {
 
         LaunchedEffect(key1 = homeState.value) {
+            when(homeState.value){
+                is PostHomeState.Loading -> {
+                    loading.value = true
+                }
+                is PostHomeState.Error -> {
 
+                }
+
+                else -> {}
+            }
         }
 
         Column(modifier = Modifier.fillMaxSize()
@@ -165,9 +177,9 @@ fun JobItems(){
             ) {
                 Text(text = "Title", color = Color.Black, maxLines = 2, overflow = TextOverflow.Ellipsis,style = TextStyle(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    fontSize = 20.sp
                 ),modifier = Modifier.fillMaxWidth(0.5f).clip(RoundedCornerShape(16.dp)).placeholder(
-                    visible = false,
+                    visible = true,
                     highlight = PlaceholderHighlight.shimmer(),
                     color = Color.LightGray
                 ))
@@ -181,7 +193,53 @@ fun JobItems(){
                 }
 
             }
-
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 6.dp).clip(
+                RoundedCornerShape(16.dp)).placeholder(
+                visible = true,
+                highlight = PlaceholderHighlight.shimmer(),
+                color = Color.LightGray
+            )) {
+                Icon(painterResource(id = R.drawable.baseline_shopping_bag_24), contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                Text(text = "Fixed: $2K .Intermediate", color = Color.Gray)
+            }
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 6.dp).clip(
+                RoundedCornerShape(16.dp)).placeholder(
+                visible = true,
+                highlight = PlaceholderHighlight.shimmer(),
+                color = Color.LightGray
+            )) {
+                Icon(painterResource(id = R.drawable.proposals), contentDescription = null, modifier = Modifier.size(30.dp).padding(end = 5.dp))
+                Text(text = "Fixed: $2K .Intermediate", color = Color.Gray)
+            }
+            Text(text = "Description", style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.clip(
+                RoundedCornerShape(16.dp)).placeholder(
+                visible = true,
+                highlight = PlaceholderHighlight.shimmer(),
+                color = Color.LightGray
+            ))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                for (x in 1..5){
+                    Box(modifier = Modifier
+                        .padding(5.dp)
+                        .clip(
+                            RoundedCornerShape(16.dp)).placeholder(
+                            visible = true,
+                            highlight = PlaceholderHighlight.shimmer(),
+                            color = Color.LightGray
+                        )
+                        .background(Color.LightGray)
+                        .padding(5.dp)
+                    ){
+                        Text(text = "hahah", color = Color.Gray)
+                    }
+                }
+            }
+            Text(text = "2025-05-12", color = Color.Gray, modifier = Modifier.padding(top = 5.dp).clip(
+                RoundedCornerShape(16.dp)).placeholder(
+                visible = true,
+                highlight = PlaceholderHighlight.shimmer(),
+                color = Color.LightGray
+            ))
         }
     }
 }
