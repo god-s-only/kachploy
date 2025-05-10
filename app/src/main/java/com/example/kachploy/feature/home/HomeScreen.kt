@@ -1,6 +1,7 @@
 package com.example.kachploy.feature.home
 
 import android.view.RoundedCorner
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import com.google.accompanist.placeholder.material3.shimmer
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -61,11 +63,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.kachploy.R
 import com.example.kachploy.models.JobsModel
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,16 +78,16 @@ fun HomeScreen(navController: NavController){
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var searchValue by remember { mutableStateOf("") }
     var viewModel: HomeViewModel = hiltViewModel()
-    var loading = remember {
-        mutableStateOf(false)
-    }
+    val context = LocalContext.current
     var homeState = viewModel.homeState.collectAsState()
     val categories = listOf<String>("Best Matches", "Most Recents", "Saved Jobs")
 
     Scaffold(modifier = Modifier.fillMaxSize(),
+        containerColor = Color.White,
         topBar = {
             MediumTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.White,
+                scrolledContainerColor = Color.LightGray,
                 titleContentColor = Color.Black
             ),
                 title = {
@@ -90,12 +95,13 @@ fun HomeScreen(navController: NavController){
                         },
                 navigationIcon = {
                     IconButton(onClick = {}) {
-                    Image(painter = painterResource(id = R.drawable.google), contentDescription = "Profile")
+                        AsyncImage(model = Firebase.auth.currentUser?.photoUrl, contentDescription = "Profile Picture")
                 } },
                 actions = {
                     IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Filled.Menu,
+                            tint = Color.Black,
                             contentDescription = "Localized description"
                         )
                     }
@@ -104,37 +110,61 @@ fun HomeScreen(navController: NavController){
             )
         }) {
 
-        LaunchedEffect(key1 = homeState.value) {
             when(homeState.value){
                 is PostHomeState.Loading -> {
-                    loading.value = true
+                    val jobs = (homeState.value as PostHomeState.Loading).jobs
+                    Column(modifier = Modifier.fillMaxSize()
+                        .padding(it)) {
+                        LazyColumn(modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)) {
+                            item {
+                                OutlinedTextField(value = searchValue, onValueChange = {searchValue = it}, placeholder = {Text(text = "Search for jobs")}, modifier = Modifier.fillMaxWidth()
+                                    .padding(15.dp)
+                                    .clip(RoundedCornerShape(5.dp)),
+                                    leadingIcon = {
+                                        Icon(imageVector = Icons.Filled.Search, contentDescription = null)
+                                    })
+                            }
+                            item {
+                                ColumnCategory(categories)
+                                HorizontalDivider()
+                            }
+                            items(jobs) { jobsModel ->
+                                JobItems(jobsModel, true)
+                            }
+                        }
+                    }
                 }
-                is PostHomeState.Error -> {
-
+                is PostHomeState.Success ->{
+                    val jobs = (homeState.value as PostHomeState.Success).jobs
+                    Column(modifier = Modifier.fillMaxSize()
+                        .padding(it)) {
+                        LazyColumn(modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)) {
+                            item {
+                                OutlinedTextField(value = searchValue, onValueChange = {searchValue = it}, placeholder = {Text(text = "Search for jobs")}, modifier = Modifier.fillMaxWidth()
+                                    .padding(15.dp)
+                                    .clip(RoundedCornerShape(5.dp)),
+                                    leadingIcon = {
+                                        Icon(imageVector = Icons.Filled.Search, contentDescription = null)
+                                    })
+                            }
+                            item {
+                                ColumnCategory(categories)
+                                HorizontalDivider()
+                            }
+                            items(jobs) { jobsModel ->
+                                JobItems(jobsModel, false)
+                            }
+                        }
+                    }
                 }
 
-                else -> {}
+                else -> {
+                    Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
+                }
             }
-        }
 
-        Column(modifier = Modifier.fillMaxSize()
-            .padding(it)) {
-            LazyColumn(modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)) {
-                item {
-                    OutlinedTextField(value = searchValue, onValueChange = {searchValue = it}, placeholder = {Text(text = "Search for jobs")}, modifier = Modifier.fillMaxWidth()
-                        .padding(15.dp)
-                        .clip(RoundedCornerShape(5.dp)),
-                        leadingIcon = {
-                            Icon(imageVector = Icons.Filled.Search, contentDescription = null)
-                        })
-                }
-                item {
-                    ColumnCategory(categories)
-                    HorizontalDivider()
-                }
 
-            }
-        }
+
 
     }
 }
@@ -166,80 +196,81 @@ fun ColumnCategory(categories: List<String>){
 }
 
 @Composable
-fun JobItems(){
+fun JobItems(jobsModel: JobsModel, loading: Boolean){
     Box(modifier = Modifier.fillMaxWidth()
-        .padding(10.dp)
         .background(Color.White)){
         Column(modifier = Modifier.padding(5.dp)) {
             Row(modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Title", color = Color.Black, maxLines = 2, overflow = TextOverflow.Ellipsis,style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                ),modifier = Modifier.fillMaxWidth(0.5f).clip(RoundedCornerShape(16.dp)).placeholder(
-                    visible = true,
+                Text(text = jobsModel.title, color = Color.Black, maxLines = 2, overflow = TextOverflow.Ellipsis,style = TextStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                ),modifier = Modifier.fillMaxWidth(0.5f).padding(5.dp).clip(RoundedCornerShape(8.dp)).placeholder(
+                    visible = loading,
                     highlight = PlaceholderHighlight.shimmer(),
                     color = Color.LightGray
                 ))
                 Row {
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Black)
                     }
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = null, tint = Color.Black)
                     }
                 }
 
             }
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 6.dp).clip(
-                RoundedCornerShape(16.dp)).placeholder(
-                visible = true,
+                RoundedCornerShape(8.dp)).placeholder(
+                visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
                 color = Color.LightGray
             )) {
-                Icon(painterResource(id = R.drawable.baseline_shopping_bag_24), contentDescription = null, modifier = Modifier.padding(end = 5.dp))
-                Text(text = "Fixed: $2K .Intermediate", color = Color.Gray)
+                Icon(painterResource(id = R.drawable.baseline_shopping_bag_24), contentDescription = null, modifier = Modifier.padding(end = 5.dp), tint = Color.Black)
+                Text(text = "Fixed: $${jobsModel.price} .Intermediate", color = Color.Gray)
             }
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 6.dp).clip(
-                RoundedCornerShape(16.dp)).placeholder(
-                visible = true,
+                RoundedCornerShape(8.dp)).placeholder(
+                visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
                 color = Color.LightGray
             )) {
-                Icon(painterResource(id = R.drawable.proposals), contentDescription = null, modifier = Modifier.size(30.dp).padding(end = 5.dp))
-                Text(text = "Fixed: $2K .Intermediate", color = Color.Gray)
+                Icon(painterResource(id = R.drawable.proposals), contentDescription = null, modifier = Modifier.size(30.dp).padding(end = 5.dp), tint = Color.Black)
+                Text(text = "Proposals: ${jobsModel.proposal}", color = Color.Gray)
             }
-            Text(text = "Description", style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.clip(
-                RoundedCornerShape(16.dp)).placeholder(
-                visible = true,
+            Text(text = jobsModel.description, style = MaterialTheme.typography.bodyMedium, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(5.dp).clip(
+                RoundedCornerShape(8.dp)).placeholder(
+                visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
                 color = Color.LightGray
             ))
             Row(modifier = Modifier.fillMaxWidth()) {
-                for (x in 1..5){
-                    Box(modifier = Modifier
-                        .padding(5.dp)
-                        .clip(
-                            RoundedCornerShape(16.dp)).placeholder(
-                            visible = true,
-                            highlight = PlaceholderHighlight.shimmer(),
-                            color = Color.LightGray
-                        )
-                        .background(Color.LightGray)
-                        .padding(5.dp)
-                    ){
-                        Text(text = "hahah", color = Color.Gray)
+                jobsModel.skillsRequired.forEach { skill ->
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .placeholder(
+                                visible = loading,
+                                highlight = PlaceholderHighlight.shimmer(),
+                                color = Color.LightGray
+                            )
+                            .background(Color.LightGray)
+                            .padding(5.dp)
+                    ) {
+                        Text(text = skill, color = Color.Gray)
                     }
                 }
             }
-            Text(text = "2025-05-12", color = Color.Gray, modifier = Modifier.padding(top = 5.dp).clip(
+                Text(text = jobsModel.createdAt, color = Color.Gray, modifier = Modifier.padding(top = 5.dp, bottom = 8.dp).clip(
                 RoundedCornerShape(16.dp)).placeholder(
-                visible = true,
+                visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
                 color = Color.LightGray
             ))
+            HorizontalDivider()
         }
     }
 }
@@ -247,5 +278,5 @@ fun JobItems(){
 @Preview
 @Composable
 fun DefaultPreview(){
-    JobItems()
+    HomeScreen(rememberNavController())
 }

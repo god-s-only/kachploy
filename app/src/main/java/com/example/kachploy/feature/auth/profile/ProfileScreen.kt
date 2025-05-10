@@ -295,7 +295,7 @@ fun ProfileScreen(navController: NavController) {
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                             .height(48.dp),
-                        enabled = imageUri.value != null,
+                        enabled = imageUri.value != null && profileState.value == ProfileState.Nothing || profileState.value == ProfileState.Error,
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
                         shape = RoundedCornerShape(8.dp)
                     ) {

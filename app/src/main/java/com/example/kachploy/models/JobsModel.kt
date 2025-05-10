@@ -16,7 +16,7 @@ data class JobsModel(
     var negotiable: String = "",
     var postedBy: String = "",
     var price: String = "",
-    var proposals: Int? = null,
+    var proposal: Int? = null,
     var skillsRequired: List<String> = emptyList(),
     var status: String = "",
     var title: String = ""

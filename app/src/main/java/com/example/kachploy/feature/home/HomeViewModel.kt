@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(): ViewModel() {
 
-    private var _homeState = MutableStateFlow<PostHomeState>(PostHomeState.Empty)
+    private var _homeState = MutableStateFlow<PostHomeState>(PostHomeState.Loading(emptyList()))
     var homeState = _homeState.asStateFlow()
 
     init {
@@ -25,29 +25,19 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     }
 
     fun getUserInformation() {
+        val list = mutableListOf<JobsModel>()
         viewModelScope.launch {
             try {
-                _homeState.value = PostHomeState.Loading
-
-                if (Firebase.auth.currentUser == null) {
-                    _homeState.value = PostHomeState.Error("User not authenticated")
-                    return@launch
-                }
-                val userDoc = Firebase.firestore
-                    .collection("users")
-                    .document(Firebase.auth.currentUser!!.uid)
-                    .get()
-                    .await()
-
-                if (userDoc.exists()) {
-                    val user = userDoc.toObject(JobsModel::class.java)
-                    _homeState.value = user?.let { PostHomeState.UserLoaded(it) }
-                        ?: PostHomeState.Error("Failed to parse user data")
-                } else {
-                    _homeState.value = PostHomeState.Empty
-                }
+                Firebase.firestore.collection("jobs").get()
+                    .addOnSuccessListener { snapshot ->
+                        snapshot.mapNotNull {
+                            val jobsModel = it.toObject(JobsModel::class.java)
+                            list.add(jobsModel)
+                        }
+                        _homeState.value = PostHomeState.Success(list)
+                    }
             } catch (e: Exception) {
-                _homeState.value = PostHomeState.Error(e.message ?: "Unknown error occurred")
+                _homeState.value = PostHomeState.Error("Error loading jobs")
             }
         }
     }

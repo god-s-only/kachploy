@@ -48,7 +48,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
 
                 // Check if user is authenticated
                 if (currentUser == null) {
-                    _profileState.value = ProfileState.Error("User not authenticated")
+                    _profileState.value = ProfileState.Error
                     return@launch
                 }
 
@@ -72,7 +72,7 @@ class ProfileViewModel @Inject constructor(@ApplicationContext val context: Cont
                 saveUserToFirestore(userInformation)
 
             } catch (e: Exception) {
-                _profileState.value = ProfileState.Error(e.message ?: "Unknown error occurred")
+                _profileState.value = ProfileState.Error
             }
         }
     }
@@ -103,5 +103,5 @@ sealed class ProfileState {
     object Nothing : ProfileState()
     object Loading : ProfileState()
     object Success : ProfileState()
-    data class Error(val message: String) : ProfileState()
+    object Error : ProfileState()
 }

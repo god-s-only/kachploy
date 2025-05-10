@@ -22,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -65,7 +66,10 @@ fun SignInScreen(navController: NavController) {
     LaunchedEffect(key1 = uiState.value) {
         when(uiState.value) {
             is SignInState.Success -> {
-                navController.navigate("profile")
+                navController.navigate("profile"){
+                    popUpTo("login"){inclusive = true}
+                }
+
             }
             is SignInState.Error -> {
                 Toast.makeText(context, "Sign in error", Toast.LENGTH_LONG).show()
@@ -108,12 +112,13 @@ fun SignInScreen(navController: NavController) {
                             style = TextStyle(
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.Bold
-                            )
+                            ), color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             modifier = Modifier.padding(bottom = 10.dp),
                             text = "Enter your email and password to log in",
-                            style = TextStyle(fontSize = 12.sp)
+                            style = TextStyle(fontSize = 12.sp),
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -124,15 +129,7 @@ fun SignInScreen(navController: NavController) {
                         value = email,
                         onValueChange = { email = it },
                         label = { Text(text = "Email") },
-                        textStyle = TextStyle(color = Color.Black),
-                        colors = TextFieldDefaults.colors().copy(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedPlaceholderColor = Color.LightGray,
-                            unfocusedPlaceholderColor = Color.Black
-                        )
+                        textStyle = TextStyle(color = Color.Black)
                     )
                 }
 
@@ -143,15 +140,7 @@ fun SignInScreen(navController: NavController) {
                         visualTransformation = PasswordVisualTransformation(),
                         onValueChange = { password = it },
                         label = { Text(text = "Password") },
-                        textStyle = TextStyle(color = Color.Black),
-                        colors = TextFieldDefaults.colors().copy(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedPlaceholderColor = Color.LightGray,
-                            unfocusedPlaceholderColor = Color.Black
-                        )
+                        textStyle = TextStyle(color = Color.Black)
                     )
                 }
 
@@ -220,7 +209,7 @@ fun SignInScreen(navController: NavController) {
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text(text = "Continue with Google", color = Color.Black)
+                                Text(text = "Continue with Google", color = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -245,7 +234,7 @@ fun SignInScreen(navController: NavController) {
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
-                                Text(text = "Continue with Facebook", color = Color.Black)
+                                Text(text = "Continue with Facebook", color = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -257,7 +246,7 @@ fun SignInScreen(navController: NavController) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "Don't have an account?")
+                            Text(text = "Don't have an account?", color = MaterialTheme.colorScheme.primary)
                             TextButton(onClick = { navController.navigate("signup") }) {
                                 Text(
                                     text = "Sign Up",
