@@ -149,7 +149,9 @@ fun HomeScreen(navController: NavController){
                                 HorizontalDivider()
                             }
                             items(jobs) { jobsModel ->
-                                JobItems(jobsModel, true)
+                                JobItems(jobsModel, true){
+
+                                }
                             }
                         }
                     }
@@ -172,7 +174,9 @@ fun HomeScreen(navController: NavController){
                                 HorizontalDivider()
                             }
                             items(jobs) { jobsModel ->
-                                JobItems(jobsModel, false)
+                                JobItems(jobsModel, false){
+                                    navController.navigate("jobDetail/${jobsModel.jobId}")
+                                }
                             }
                         }
                     }
@@ -216,8 +220,11 @@ fun ColumnCategory(categories: List<String>){
 }
 
 @Composable
-fun JobItems(jobsModel: JobsModel, loading: Boolean){
+fun JobItems(jobsModel: JobsModel, loading: Boolean, onClick:() -> Unit){
     Box(modifier = Modifier.fillMaxWidth()
+        .clickable{
+            onClick()
+        }
         .background(Color.White)){
         Column(modifier = Modifier.padding(5.dp)) {
             Row(modifier = Modifier.fillMaxWidth(),
@@ -284,7 +291,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean){
                     }
                 }
             }
-                Text(text = jobsModel.createdAt, color = Color.Gray, modifier = Modifier.padding(top = 5.dp, bottom = 8.dp).clip(
+                Text(text = "Posted: ${jobsModel.createdAt}", color = Color.Gray, modifier = Modifier.padding(top = 5.dp, bottom = 8.dp).clip(
                 RoundedCornerShape(16.dp)).placeholder(
                 visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),
