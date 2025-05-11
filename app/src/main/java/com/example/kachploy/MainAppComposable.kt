@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -36,9 +37,10 @@ fun MainApp() {
     val proposalsTab = TabBarItem(Routes.proposals, Icons.Filled.DateRange, Icons.Filled.DateRange)
     val jobsTab = TabBarItem(Routes.contracts, Icons.Filled.MailOutline, Icons.Filled.MailOutline)
     val itemsTab = TabBarItem(Routes.messages, Icons.Filled.Email, Icons.Filled.Email)
+    val alertsTab = TabBarItem(Routes.alerts, Icons.Filled.Notifications, Icons.Filled.Notifications)
 
     val tabItems = listOf(
-        homeTab, proposalsTab, jobsTab, itemsTab
+        homeTab, proposalsTab, jobsTab, itemsTab, alertsTab
     )
     Scaffold(
         bottomBar = { TabView(tabItems, navController) },
@@ -64,6 +66,9 @@ fun MainApp() {
             }
             composable(itemsTab.title) {
                 Text(text = itemsTab.title)
+            }
+            composable(alertsTab.title) {
+                Text(text = alertsTab.title)
             }
         }
     }
