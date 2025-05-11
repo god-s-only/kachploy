@@ -51,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -95,8 +96,9 @@ fun HomeScreen(navController: NavController){
                         },
                 navigationIcon = {
                     IconButton(onClick = {}) {
-                        AsyncImage(model = Firebase.auth.currentUser?.photoUrl, contentDescription = "Profile Picture")
-                } },
+                        AsyncImage(model = Firebase.auth.currentUser?.photoUrl, contentDescription = null, contentScale = ContentScale.Crop)
+                    }
+                 },
                 actions = {
                     IconButton(onClick = { }) {
                         Icon(
@@ -181,10 +183,7 @@ fun HomeScreen(navController: NavController){
                         }
                     }
                 }
-
-                else -> {
-                    Toast.makeText(context, "Error", Toast.LENGTH_LONG).show()
-                }
+                else -> {}
             }
 
 
