@@ -26,6 +26,7 @@ import com.example.kachploy.tabview.TabBarItem
 import com.example.kachploy.tabview.TabView
 import com.google.firebase.Firebase
 import com.example.kachploy.R
+import com.example.kachploy.feature.proposals.ProposalsScreen
 import com.example.kachploy.util.Routes
 import com.google.firebase.auth.auth
 
@@ -59,7 +60,7 @@ fun MainApp() {
                 JobDetailsScreen(navController, jobId)
             }
             composable(proposalsTab.title) {
-                Text(text = proposalsTab.title)
+                ProposalsScreen(navController) { }
             }
             composable(jobsTab.title) {
                 Text(text = jobsTab.title)
