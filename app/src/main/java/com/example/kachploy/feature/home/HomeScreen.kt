@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -240,7 +241,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean, onClick:() -> Unit){
                 ))
                 Row {
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = null, tint = Color.Black)
+                        Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null, tint = Color.Black)
                     }
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.Filled.Clear, contentDescription = null, tint = Color.Black)
