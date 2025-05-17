@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,9 +40,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
@@ -72,64 +75,82 @@ fun JobDetailsScreen(navController: NavController, jobId: String){
         }
     )
     {
-        Column(modifier = Modifier.padding(it)
-            .padding(10.dp)
-            .verticalScroll(scrollState)) {
-            Row(modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = "AI App Development Project", fontWeight = FontWeight.SemiBold, color = Color.Black)
-                Card(
-                    modifier = Modifier.padding(5.dp),
-                    colors = CardDefaults.cardColors().copy(
-                        containerColor = Color.Transparent
-                    ),
-                    shape = CircleShape,
-                    border = BorderStroke(1.dp, Color.Black)
-                ){
-                    IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
+        Column(modifier = Modifier.fillMaxSize()
+            .padding(it)) {
+            Column(modifier = Modifier
+                .padding(10.dp)
+                .verticalScroll(scrollState)) {
+                Row(modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "AI App Development Project", fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Card(
+                        modifier = Modifier.padding(5.dp),
+                        colors = CardDefaults.cardColors().copy(
+                            containerColor = Color.Transparent
+                        ),
+                        shape = CircleShape,
+                        border = BorderStroke(1.dp, Color.Black)
+                    ){
+                        IconButton(onClick = {}) {
+                            Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
+                        }
                     }
                 }
-            }
-            Text(text = "Posted 29 minutes ago", color = Color.Gray)
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null)
-                Text(text = "Worldwide", color = Color.Gray)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "8 required Connects (0 available)", color = Color.Gray)
-            Spacer(modifier = Modifier.height(20.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(30.dp))
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Summary", fontWeight = FontWeight.SemiBold)
-                Text(text = "Summary")
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(20.dp))
-            Row{
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                Text(text = "Posted 29 minutes ago", color = Color.Gray)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null)
+                    Text(text = "Worldwide", color = Color.Gray)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(text = "8 required Connects (0 available)", color = Color.Gray)
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(30.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Summary", fontWeight = FontWeight.SemiBold)
+                    Text(text = "Summary")
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(20.dp))
+                Row{
+                    Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                    Column {
+                        Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
+                        Text(text = "Fixed Price", color = Color.Gray)
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row{
+                    Icon(imageVector = Icons.Outlined.Star, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                    Column {
+                        Text(text = "Entry Level", fontWeight = FontWeight.SemiBold)
+                        Text(text = "Experience Level", color = Color.Gray)
+                    }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(20.dp))
+                Row {
+                    Text(text = "Project Type: ", fontWeight = FontWeight.SemiBold)
+                    Text(text = "One-time project")
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(20.dp))
                 Column {
-                    Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
-                    Text(text = "Fixed Price", color = Color.Gray)
+                    Text(text = "Skills and Expertise", fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 20.sp))
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
-            Row{
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
-                Column {
-                    Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
-                    Text(text = "Fixed Price", color = Color.Gray)
-                }
-            }
+
         }
+
     }
 }
 @Preview(showBackground = true)
