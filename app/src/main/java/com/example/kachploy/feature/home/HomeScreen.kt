@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -241,7 +242,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean, onClick:() -> Unit){
                 ))
                 Row {
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Outlined.Favorite, contentDescription = null, tint = Color.Black)
+                        Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null, tint = Color.Black)
                     }
                     IconButton(onClick = {}) {
                         Icon(imageVector = Icons.Filled.Clear, contentDescription = null, tint = Color.Black)
@@ -267,7 +268,7 @@ fun JobItems(jobsModel: JobsModel, loading: Boolean, onClick:() -> Unit){
                 Icon(painterResource(id = R.drawable.proposals), contentDescription = null, modifier = Modifier.size(30.dp).padding(end = 5.dp), tint = Color.Black)
                 Text(text = "Proposals: ${jobsModel.proposal}", color = Color.Gray)
             }
-            Text(text = jobsModel.description, maxLines = 2, overflow = TextOverflow.Ellipsis, color = Color.Gray,modifier = Modifier.padding(5.dp).clip(
+            Text(text = jobsModel.description, maxLines = 2, overflow = TextOverflow.Ellipsis ,modifier = Modifier.padding(5.dp).clip(
                 RoundedCornerShape(8.dp)).placeholder(
                 visible = loading,
                 highlight = PlaceholderHighlight.shimmer(),

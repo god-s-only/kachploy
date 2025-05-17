@@ -17,10 +17,16 @@ import androidx.compose.material3.Card
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -47,7 +53,8 @@ fun JobDetailsScreen(navController: NavController, jobId: String){
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         containerColor = Color.White,
-        topBar = {CenterAlignedTopAppBar(
+        topBar = {
+            CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.LightGray,
                 titleContentColor = Color.Black
@@ -78,11 +85,11 @@ fun JobDetailsScreen(navController: NavController, jobId: String){
                     colors = CardDefaults.cardColors().copy(
                         containerColor = Color.Transparent
                     ),
-                        shape = CircleShape,
+                    shape = CircleShape,
                     border = BorderStroke(1.dp, Color.Black)
                 ){
                     IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                        Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = null)
                     }
                 }
             }
@@ -91,7 +98,36 @@ fun JobDetailsScreen(navController: NavController, jobId: String){
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = Icons.Filled.LocationOn, contentDescription = null)
-                Text(text = "Worldwide")
+                Text(text = "Worldwide", color = Color.Gray)
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "8 required Connects (0 available)", color = Color.Gray)
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(30.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Summary", fontWeight = FontWeight.SemiBold)
+                Text(text = "Summary")
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(20.dp))
+            Row{
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                Column {
+                    Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
+                    Text(text = "Fixed Price", color = Color.Gray)
+                }
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Row{
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
+                Column {
+                    Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
+                    Text(text = "Fixed Price", color = Color.Gray)
+                }
             }
         }
     }
