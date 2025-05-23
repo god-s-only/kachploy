@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,14 +46,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.kachploy.util.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JobDetailsScreen(navController: NavController, jobId: String){
+fun JobDetailsScreen(
+    navController: NavController,
+    jobId: String,
+    viewModel: JobDetailsViewModel = hiltViewModel()
+){
+    LaunchedEffect(key1 = true) {
+        viewModel.jobState.collect { event ->
+            when(event){
+                is UiEvent.ShowSnackBar -> {
+
+                }
+                else -> Unit
+            }
+        }
+        viewModel.getJobDetail(jobId)
+    }
+
     val scrollbehaviour = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val scrollState = rememberScrollState()
+
+    val jobDetail
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         containerColor = Color.White,
