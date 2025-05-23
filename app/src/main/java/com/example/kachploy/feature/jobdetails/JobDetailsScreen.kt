@@ -1,6 +1,5 @@
-package com.example.kachploy.feature.job_details
+package com.example.kachploy.feature.jobdetails
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,15 +11,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Star
@@ -32,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -41,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +46,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.kachploy.util.UiEvent
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material3.shimmer
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,6 +59,10 @@ fun JobDetailsScreen(
     viewModel: JobDetailsViewModel = hiltViewModel()
 ){
     LaunchedEffect(key1 = true) {
+        viewModel.getJobDetail(jobId)
+    }
+
+    LaunchedEffect(key1 = true) {
         viewModel.jobState.collect { event ->
             when(event){
                 is UiEvent.ShowSnackBar -> {
@@ -67,13 +71,13 @@ fun JobDetailsScreen(
                 else -> Unit
             }
         }
-        viewModel.getJobDetail(jobId)
     }
 
     val scrollbehaviour = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val scrollState = rememberScrollState()
 
-    val jobDetail
+    val jobDetail = viewModel.jobDetail
+    val isLoading = viewModel.isLoading
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         containerColor = Color.White,
@@ -105,7 +109,18 @@ fun JobDetailsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "AI App Development Project", fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Text(
+                        text = jobDetail?.title ?: "",
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(5.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .placeholder(
+                                visible = isLoading,
+                                highlight = PlaceholderHighlight.shimmer(),
+                                color = Color.LightGray
+                            )
+                    )
                     Card(
                         modifier = Modifier.padding(5.dp),
                         colors = CardDefaults.cardColors().copy(
@@ -119,7 +134,7 @@ fun JobDetailsScreen(
                         }
                     }
                 }
-                Text(text = "Posted 29 minutes ago", color = Color.Gray)
+                Text(text = "Posted ${jobDetail?.createdAt}", color = Color.Gray)
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -135,7 +150,14 @@ fun JobDetailsScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(text = "Summary", fontWeight = FontWeight.SemiBold)
-                    Text(text = "Summary")
+                    Text(text = jobDetail?.description ?: "", modifier = Modifier
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .placeholder(
+                            visible = isLoading,
+                            highlight = PlaceholderHighlight.shimmer(),
+                            color = Color.LightGray
+                        ))
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 HorizontalDivider()
@@ -143,7 +165,14 @@ fun JobDetailsScreen(
                 Row{
                     Icon(imageVector = Icons.Outlined.Info, contentDescription = null, modifier = Modifier.padding(end = 5.dp))
                     Column {
-                        Text(text = "$30.00", fontWeight = FontWeight.SemiBold)
+                        Text(text = "$${jobDetail?.price ?: ""}", fontWeight = FontWeight.SemiBold, modifier = Modifier
+                            .padding(5.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .placeholder(
+                                visible = isLoading,
+                                highlight = PlaceholderHighlight.shimmer(),
+                                color = Color.LightGray
+                            ))
                         Text(text = "Fixed Price", color = Color.Gray)
                     }
                 }

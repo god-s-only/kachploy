@@ -1,5 +1,6 @@
-package com.example.kachploy.feature.job_details
+package com.example.kachploy.feature.jobdetails
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,14 +10,14 @@ import com.example.kachploy.models.JobsModel
 import com.example.kachploy.util.UiEvent
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class JobDetailsViewModel: ViewModel() {
+class JobDetailsViewModel @Inject constructor(): ViewModel() {
     var jobDetail by mutableStateOf<JobsModel?>(null)
         private set
     var isLoading by mutableStateOf(false)
@@ -27,6 +28,7 @@ class JobDetailsViewModel: ViewModel() {
 
     fun getJobDetail(jobId: String) {
         isLoading = true
+        Log.i("id", "Id is $jobId")
         Firebase.firestore.collection("jobs").document(jobId).get()
             .addOnSuccessListener { data ->
                 isLoading = false

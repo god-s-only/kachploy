@@ -1,6 +1,4 @@
-package com.example.kachploy.feature.job_details
-
-import com.example.kachploy.models.JobsModel
+package com.example.kachploy.feature.jobdetails
 
 sealed class JobDetailsEvent{
     object FetchJobError: JobDetailsEvent()
